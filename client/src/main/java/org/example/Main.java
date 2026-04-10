@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static final String BASE_URL = "http://localhost:8080/namingServer";
+    private static String BASE_URL = "http://localhost:8080/namingServer";
     private static final HttpClient client = HttpClient.newHttpClient();
 
     private static String nodeName;
@@ -45,6 +45,10 @@ public class Main {
         }
         else {
             postRandomFiles(7);
+        }
+
+        if (args.length >= 4) {
+            BASE_URL = "http://"+args[3]+":8080/namingServer";
         }
 
         int selection;
