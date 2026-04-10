@@ -29,6 +29,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>client</finalName>
     </build>
 
 </project>
