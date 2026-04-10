@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.File;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -12,20 +13,38 @@ public class Main {
     private static final String BASE_URL = "http://localhost:8080/namingServer";
     private static final HttpClient client = HttpClient.newHttpClient();
 
-    static void main() throws Exception {
-        String nodeName = "node" + (int)(Math.random() * 1000);
-        String nodeIP = "192.168." + (int)(Math.random() * 255) + "." + (int)(Math.random() * 255);
+    private static String nodeName;
+    private static String nodeIP;
+
+    static void main(String[] args) throws Exception {
+
+        if (args.length >= 2) {
+            nodeName =  args[0];
+            nodeIP = args[1];
+        }
+        else {
+            nodeName = "node" + (int) (Math.random() * 1000);
+            nodeIP = "192.168." + (int) (Math.random() * 255) + "." + (int) (Math.random() * 255);
+        }
 
         System.out.println("Name of the node: " + nodeName);
         System.out.println("IP of the node: " + nodeIP);
 
         post("/newnode/" + nodeName + "/" + nodeIP);
 
-        int numFiles = 7;
-        for (int i = 0; i < numFiles; i++) {
-            String fileName = "file" + (int)(Math.random() * 50) + ".txt";
-            post("/newfile/" + nodeName + "/" + fileName);
-            System.out.println("File registered: " + fileName + " on " + nodeName);
+        if (args.length >= 3) {
+            File dir = new File(args[2]);
+            File[] directoryListing = dir.listFiles();
+            if (directoryListing != null) {
+                for (File child : directoryListing) {
+                    String filename = child.getName();
+                    post("/newfile/" + nodeName + "/" + filename);
+                    System.out.println("File registered: " + filename + " on " + nodeName);
+                }
+            }
+        }
+        else {
+            postRandomFiles(7);
         }
 
         int selection;
@@ -58,6 +77,14 @@ public class Main {
                 System.out.println("------------------------\n");
                 System.out.println("Invalid input");
             }
+        }
+    }
+
+    private static void postRandomFiles(int numFiles) throws Exception {
+        for (int i = 0; i < numFiles; i++) {
+            String fileName = "file" + (int)(Math.random() * 50) + ".txt";
+            post("/newfile/" + nodeName + "/" + fileName);
+            System.out.println("File registered: " + fileName + " on " + nodeName);
         }
     }
 
