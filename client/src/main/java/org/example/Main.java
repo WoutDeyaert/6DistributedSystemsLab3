@@ -18,6 +18,10 @@ public class Main {
 
     static void main(String[] args) throws Exception {
 
+        if (args.length >= 4) {
+            BASE_URL = "http://"+args[3]+":8080/namingServer";
+        }
+
         if (args.length >= 2) {
             nodeName =  args[0];
             nodeIP = args[1];
@@ -45,10 +49,6 @@ public class Main {
         }
         else {
             postRandomFiles(7);
-        }
-
-        if (args.length >= 4) {
-            BASE_URL = "http://"+args[3]+":8080/namingServer";
         }
 
         int selection;
