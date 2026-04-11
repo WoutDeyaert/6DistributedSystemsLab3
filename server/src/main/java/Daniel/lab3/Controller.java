@@ -9,11 +9,11 @@ import java.util.List;
 public class Controller {
 
     @Autowired
-    private NamingServer namingServer;   //injects the banking service automatically
+    private NamingServer namingServer;
 
     @GetMapping("/")
     public String home(){
-        return "I hate ...";
+        return "Welcome";
     }
 
     @GetMapping("/ipaddress/{nodename}")
@@ -24,6 +24,7 @@ public class Controller {
     public List<String> nodename(@PathVariable String filename){
         return namingServer.getNode_s_(filename);
     }
+
     @PostMapping("/newnode/{nodename}/{ipaddress}")
     public String newnode(@PathVariable String nodename, @PathVariable String ipaddress){
         boolean done = namingServer.registerNode(nodename, ipaddress);
@@ -37,6 +38,11 @@ public class Controller {
     @PostMapping("/newfile/{nodename}/{filename}")
     public void newfile(@PathVariable String nodename, @PathVariable String filename){
         namingServer.registerFile(filename,nodename);
+    }
+
+    @PostMapping("/removefile/{nodename}/{filename}")
+    public void removefile(@PathVariable String nodename, @PathVariable String filename){
+        namingServer.deleteFile(filename,nodename);
     }
 
 }

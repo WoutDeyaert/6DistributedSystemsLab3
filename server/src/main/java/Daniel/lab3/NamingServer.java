@@ -22,7 +22,7 @@ public class NamingServer {
 
     public boolean registerNode(String nodeName,String ipAddress) {
         int hashNode = nodeName.hashCode();
-        if (nodeNames.containsKey(hashNode)) {  //if the name is already in the map=>fuck you
+        if (nodeNames.containsKey(hashNode)) {
             return false;
         }
         nodeNames.put(hashNode, ipAddress);
@@ -33,16 +33,28 @@ public class NamingServer {
     public boolean registerFile(String fileName,String nodeName) {
         int hashFile = fileName.hashCode();
         if (fileNames.containsKey(hashFile)) {
-            List<String> fileList = fileNames.get(hashFile);
-            fileList.add(nodeName);
+            List<String> nameList = fileNames.get(hashFile);
+            nameList.add(nodeName);
         }
         else {
-            List<String> fileList = new ArrayList<>();
-            fileList.add(nodeName);
-            fileNames.put(hashFile, fileList);
+            List<String> nameList = new ArrayList<>();
+            nameList.add(nodeName);
+            fileNames.put(hashFile, nameList);
         }
         this.saveToJson(filename);
         return true;
+    }
+
+    public boolean deleteFile(String fileName,String nodeName) {
+        int hashFile = fileName.hashCode();
+        if (fileNames.containsKey(hashFile)) {
+            List<String> nameList = fileNames.get(hashFile);
+            boolean done = nameList.remove(nodeName); //returns true if the nodeName was in the list
+            this.saveToJson(filename);
+            return done;
+        }
+        this.saveToJson(filename);
+        return false;
     }
 
     /*
